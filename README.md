@@ -1,55 +1,34 @@
-# My Web App
+# Feature: Debugging Process
 
-This is a chromeless web app designed to run on an iPad, served by a Node.js and Express server.
+## Summary
 
-## Features
+This feature branch focuses on setting up a WebSocket server to facilitate debugging by routing all traffic to the server's console log. The server prefixes incoming messages with the client's IP address and formats the log messages in dark green.
 
-- Full-screen, chromeless experience
-- Service worker for offline support
-- PWA (Progressive Web App) features
-- Prevents pinch zoom for a consistent user interface
+## Key Changes
 
-## Setup
+1. **Feature Branch Creation:**
+   - Created a new branch `feature/debugging-process`.
 
-1. Clone the repository:
+2. **WebSocket Server Setup:**
+   - Installed the `ws` library for WebSocket support.
+   - Configured a WebSocket server to handle incoming connections and messages.
+   - Prefixed incoming messages with the client's IP address and formatted them in dark green using the `chalk` library.
+   - Added logging to track client connections and disconnections.
 
-    ```sh
-    git clone https://github.com/your-username/your-repo.git
-    cd your-repo
-    ```
+3. **Server Integration:**
+   - Updated the main server file to include and run the WebSocket server alongside the Express server.
 
-2. Install dependencies:
+4. **Client-Side WebSocket Connection:**
+   - Set up the WebSocket client in the application to connect to the WebSocket server using the hostname of the server that served the content.
+   - Ensured the WebSocket client sends a test message upon establishing a connection.
 
-    ```sh
-    npm install
-    ```
+5. **Troubleshooting:**
+   - Added detailed logging to the WebSocket server for better troubleshooting.
+   - Ensured the client-side WebSocket connection and message sending are correctly implemented.
+   - Tested the WebSocket connection, verifying that messages are received and logged correctly.
 
-3. Run the server:
+## Testing and Validation
 
-    ```sh
-    node server.js
-    ```
-
-4. Open your web app in the browser:
-
-    Navigate to `http://localhost:3000` on your iPad or another device on the same network.
-
-## Project Structure
-
-```plaintext
-my-webapp/
-│
-├── public/
-│   ├── app.js
-│   ├── index.html
-│   ├── manifest.json
-│   ├── service-worker.js
-│   └── styles.css
-│
-├── .gitignore
-├── package.json
-├── server.js
-└── README.md
-
-License
-This project is licensed under the MIT License.
+- Verified the WebSocket server is running and listening for connections.
+- Confirmed the client successfully connects to the WebSocket server.
+- Ensured that messages sent from the client are received and logged by the server, with the correct IP address prefix and formatting.
