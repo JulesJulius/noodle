@@ -7,7 +7,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Noodle Server",
             "skipFiles": [
                 "<node_internals>/**"
             ],
