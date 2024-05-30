@@ -1,3 +1,4 @@
+// public/app.js
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js')
         .then(registration => {
@@ -26,3 +27,24 @@ document.addEventListener('touchmove', function(event) {
         event.preventDefault();
     }
 }, { passive: false });
+
+// WebSocket client setup
+const socket = new WebSocket(`ws://${window.location.hostname}:8080`);
+
+socket.onopen = function(event) {
+    console.log('WebSocket is connected.');
+    // Example: sending a message to the server after connection is established
+    socket.send('Hello Server!');
+};
+
+socket.onmessage = function(event) {
+    console.log('Message from server:', event.data);
+};
+
+socket.onerror = function(event) {
+    console.error('WebSocket error observed:', event);
+};
+
+socket.onclose = function(event) {
+    console.log('WebSocket is closed now.');
+};

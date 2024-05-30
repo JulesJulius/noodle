@@ -1,17 +1,17 @@
+// server.js
 const express = require('express');
 const path = require('path');
 const app = express();
+const http = require('http');
+const server = http.createServer(app);
 
-// Serve static files from the public directory
+// Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Default route
-app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
-});
+// Start the WebSocket server
+require('./ws-server');
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+const port = 3000;
+server.listen(port, () => {
+    console.log(`Express server is running on http://localhost:${port}`);
 });
