@@ -22,6 +22,10 @@ public/
 ├── index.html
 ├── manifest.json
 ├── service-worker.js
+├── .gitignore
+├── README.md
+├── server.js
+├── ws-server.js
 └── styles.css
 ```
 
@@ -120,7 +124,3 @@ Open your web browser and navigate to http://localhost:3000/workspace to view th
 git push origin feature/workspace-concept
 Create a pull request from feature/workspace-concept to develop and describe your changes in detail.
 ```
-
-
-# License
-### This project is licensed under the MIT License. See the LICENSE file for details.
