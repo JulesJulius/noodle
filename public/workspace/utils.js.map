@@ -1,0 +1,72 @@
+/**
+ * calculateMidpoint(touches)
+ * Calculates the midpoint (average) of all touch points.
+ * @param {TouchList} touches - The list of touch points.
+ * @returns {Object} An object containing the x and y coordinates of the midpoint.
+ */
+ export function calculateMidpoint(touches);
+
+ /**
+  * calculateDistances(touches, midpoint)
+  * Calculates the distances of all touch points from a given midpoint.
+  * @param {TouchList} touches - The list of touch points.
+  * @param {Object} midpoint - The midpoint with x and y coordinates.
+  * @returns {Array<number>} An array of distances from each touch point to the midpoint.
+  */
+ export function calculateDistances(touches, midpoint);
+ 
+ /**
+  * calculateAngles(touches, midpoint)
+  * Calculates the angles of all touch points relative to a given midpoint.
+  * @param {TouchList} touches - The list of touch points.
+  * @param {Object} midpoint - The midpoint with x and y coordinates.
+  * @returns {Array<number>} An array of angles from each touch point to the midpoint.
+  */
+ export function calculateAngles(touches, midpoint);
+ 
+ /**
+  * fireGrabEvent(midpoint, touchArea)
+  * Fires a custom 'grab' event with the coordinates of the midpoint.
+  * @param {Object} midpoint - The midpoint with x and y coordinates.
+  * @param {HTMLElement} touchArea - The touch area element to dispatch the event.
+  */
+ export function fireGrabEvent(midpoint, touchArea);
+ 
+ /**
+  * fireReleaseEvent(touchArea)
+  * Fires a custom 'release' event.
+  * @param {HTMLElement} touchArea - The touch area element to dispatch the event.
+  */
+ export function fireReleaseEvent(touchArea);
+ 
+ /**
+  * updateCircles(touches, fingers)
+  * Updates the positions of the circles to match the touch points.
+  * @param {TouchList} touches - The list of touch points.
+  * @param {Object} fingers - An object containing the circle elements.
+  */
+ export function updateCircles(touches, fingers);
+ 
+ /**
+  * updateLinesAndCrosshair(touches, fingers, lines, crosshair, touchCircle, workspace, touchArea)
+  * Updates the lines and crosshair based on the touch points and workspace state.
+  * @param {TouchList} touches - The list of touch points.
+  * @param {Object} fingers - An object containing the circle elements.
+  * @param {Object} lines - An object containing the line and crosshair elements.
+  * @param {HTMLElement} crosshair - The crosshair element.
+  * @param {HTMLElement} touchCircle - The touch circle element.
+  * @param {Object} workspace - The global workspace state object.
+  * @param {HTMLElement} touchArea - The touch area element to dispatch events.
+  */
+ export function updateLinesAndCrosshair(touches, fingers, lines, crosshair, touchCircle, workspace, touchArea);
+ 
+ /**
+  * updateCircle(touches, touchCircle, lines, workspace)
+  * Updates the touch circle based on the touch points and workspace state.
+  * @param {TouchList} touches - The list of touch points.
+  * @param {HTMLElement} touchCircle - The touch circle element.
+  * @param {Object} lines - An object containing the line and crosshair elements.
+  * @param {Object} workspace - The global workspace state object.
+  */
+ export function updateCircle(touches, touchCircle, lines, workspace);
+ 
