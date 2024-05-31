@@ -2,16 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Workspace</title>
     <link rel="stylesheet" href="../styles.css">
-    <link rel="stylesheet" href="workspace.css">
     <script src="../app.js" defer></script>
+    <link rel="stylesheet" href="workspace.css">
     <script src="workspace.js" defer></script>
 </head>
 <body>
     <div id="workspace">
-        <div id="pan-zoom-rotate"></div>
+        <svg id="touchArea" width="100%" height="100%" style="background-color: #f0f0f0;">
+            <rect id="demoSquare" x="100" y="100" width="100" height="100" fill="lightblue" />
+            <circle id="finger1" cx="50" cy="50" r="20" fill="red" />
+            <circle id="finger2" cx="50" cy="50" r="20" fill="green" />
+            <circle id="finger3" cx="50" cy="50" r="20" fill="blue" />
+            <circle id="finger4" cx="50" cy="50" r="20" fill="yellow" />
+            <circle id="finger5" cx="50" cy="50" r="20" fill="purple" />
+            <line id="line1" x1="0" y1="0" x2="0" y2="0" stroke="darkgray" stroke-width="2" style="visibility: hidden;" />
+            <line id="line2" x1="0" y1="0" x2="0" y2="0" stroke="darkgray" stroke-width="2" style="visibility: hidden;" />
+            <line id="crosshairHorizontal" x1="0" y1="0" x2="0" y2="0" stroke="darkgray" stroke-width="1" style="visibility: hidden;" />
+            <line id="crosshairVertical" x1="0" y1="0" x2="0" y2="0" stroke="darkgray" stroke-width="1" style="visibility: hidden;" />
+            <circle id="touchCircle" cx="30" cy="30" r="0" stroke="darkgray" stroke-width="2" fill="none" style="visibility: hidden;" />
+        </svg>
     </div>
 </body>
 </html>
