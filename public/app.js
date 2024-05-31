@@ -48,3 +48,10 @@ socket.onerror = function(event) {
 socket.onclose = function(event) {
     console.log('WebSocket is closed now.');
 };
+
+var console_log = console.log
+console.log = function () {
+    
+    socket.send(Array.from(arguments).join(' '))
+    console_log.apply(this, arguments)
+}

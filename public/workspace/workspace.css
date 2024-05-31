@@ -8,17 +8,17 @@ body, html {
 
 #workspace {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100%;
+    width: 100%;
     background-color: #f0f0f0;
 }
 
-h1 {
-    font-size: 2em;
-}
-
-p {
-    font-size: 1.2em;
+#pan-zoom-rotate {
+    width: 80%;
+    height: 80%;
+    background-image: url('../img/workspace-background-tile.2.jpg');
+    background-repeat: repeat;
+    transform-origin: center center;
 }
