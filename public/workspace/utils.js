@@ -24,7 +24,7 @@ export function fireReleaseEvent(touchArea) {
     touchArea.dispatchEvent(event);
 }
 
-export function updateCircles(touches, fingers) {
+export function updateCircles(touches, fingers, nodes) {
     for (let i = 0; i < touches.length; i++) {
         const touch = touches[i];
         const finger = fingers[i];
@@ -33,9 +33,19 @@ export function updateCircles(touches, fingers) {
             finger.setAttribute('cy', touch.clientY);
         }
     }
+
+    nodes.forEach(node => {
+        const state = node.getAttribute('state');
+        if (state === 'grabbed') {
+            const x = parseFloat(node.getAttribute('cx')) || 0;
+            const y = parseFloat(node.getAttribute('cy')) || 0;
+            node.setAttribute('cx', x + globalVars.temporaryOffset[0] - globalVars.lastOffset[0]);
+            node.setAttribute('cy', y + globalVars.temporaryOffset[1] - globalVars.lastOffset[1]);
+        }
+    });
 }
 
-export function updateLinesAndCrosshair(touches, fingers, lines, crosshair, touchCircle, workspace, touchArea) {
+export function updateLinesAndCrosshair(touches, fingers, lines, crosshair, touchCircle, globalVars, touchArea, nodes) {
     const { line1, line2, crosshairHorizontal, crosshairVertical } = lines;
     if (touches.length === 2) {
         const touch1 = touches[0];
@@ -44,20 +54,20 @@ export function updateLinesAndCrosshair(touches, fingers, lines, crosshair, touc
         const midpoint = calculateMidpoint(touches);
         const distance = Math.hypot(touch2.clientX - touch1.clientX, touch2.clientY - touch1.clientY);
 
-        if (workspace.initialDistance === null || distance > workspace.initialDistance) {
-            workspace.initialDistance = distance;
+        if (globalVars.initialDistance === null || distance > globalVars.initialDistance) {
+            globalVars.initialDistance = distance;
         }
 
-        if (distance < (2 / 3) * workspace.initialDistance) {
-            if (!workspace.crosshairRed) {
-                workspace.crosshairRed = true;
+        if (distance < (2 / 3) * globalVars.initialDistance) {
+            if (!globalVars.crosshairRed) {
+                globalVars.crosshairRed = true;
                 crosshairHorizontal.setAttribute('stroke', 'red');
                 crosshairVertical.setAttribute('stroke', 'red');
                 fireGrabEvent(midpoint, touchArea);
             }
         } else {
-            if (workspace.crosshairRed) {
-                workspace.crosshairRed = false;
+            if (globalVars.crosshairRed) {
+                globalVars.crosshairRed = false;
                 crosshairHorizontal.setAttribute('stroke', 'darkgray');
                 crosshairVertical.setAttribute('stroke', 'darkgray');
                 fireReleaseEvent(touchArea);
@@ -99,32 +109,34 @@ export function updateLinesAndCrosshair(touches, fingers, lines, crosshair, touc
         touchCircle.style.visibility = 'hidden';
 
         // Update temporary variables
-        if (workspace.initialMidpoint === null) {
-            workspace.initialMidpoint = midpoint;
+        if (globalVars.initialMidpoint === null) {
+            globalVars.initialMidpoint = midpoint;
         }
-        if (workspace.initialAngles === null) {
-            workspace.initialAngles = calculateAngles(touches, workspace.initialMidpoint);
+        if (globalVars.initialAngles === null) {
+            globalVars.initialAngles = calculateAngles(touches, globalVars.initialMidpoint);
         }
 
         const currentAngles = calculateAngles(touches, midpoint);
-        const angleDiff = currentAngles.map((angle, i) => angle - workspace.initialAngles[i]);
-        workspace.temporaryRotation = angleDiff.reduce((sum, diff) => sum + diff, 0) / angleDiff.length;
+        const angleDiff = currentAngles.map((angle, i) => angle - globalVars.initialAngles[i]);
+        globalVars.temporaryRotation = angleDiff.reduce((sum, diff) => sum + diff, 0) / angleDiff.length;
 
         const currentDistances = calculateDistances(touches, midpoint);
-        workspace.temporaryScale = currentDistances.reduce((sum, dist) => sum + dist, 0) / currentDistances.length / workspace.initialDistance;
+        globalVars.temporaryScale = currentDistances.reduce((sum, dist) => sum + dist, 0) / currentDistances.length / globalVars.initialDistance;
 
-        workspace.temporaryOffset = [midpoint.midX - workspace.initialMidpoint.midX, midpoint.midY - workspace.initialMidpoint.midY];
+        globalVars.temporaryOffset = [midpoint.midX - globalVars.initialMidpoint.midX, midpoint.midY - globalVars.initialMidpoint.midY];
 
         // Apply temporary offset to grabbed elements
         const grabbedElements = document.querySelectorAll('[state="grabbed"]');
         grabbedElements.forEach(element => {
-            const x = parseFloat(element.getAttribute('x')) || 0;
-            const y = parseFloat(element.getAttribute('y')) || 0;
-            element.setAttribute('x', x + workspace.temporaryOffset[0] - workspace.lastOffset[0]);
-            element.setAttribute('y', y + workspace.temporaryOffset[1] - workspace.lastOffset[1]);
+            const x = parseFloat(element.getAttribute('cx') || element.getAttribute('x')) || 0;
+            const y = parseFloat(element.getAttribute('cy') || element.getAttribute('y')) || 0;
+            element.setAttribute('cx', x + globalVars.temporaryOffset[0] - globalVars.lastOffset[0]);
+            element.setAttribute('cy', y + globalVars.temporaryOffset[1] - globalVars.lastOffset[1]);
+            element.setAttribute('x', x + globalVars.temporaryOffset[0] - globalVars.lastOffset[0]);
+            element.setAttribute('y', y + globalVars.temporaryOffset[1] - globalVars.lastOffset[1]);
         });
 
-        workspace.lastOffset = [...workspace.temporaryOffset];
+        globalVars.lastOffset = [...globalVars.temporaryOffset];
     } else {
         line1.style.visibility = 'hidden';
         line2.style.visibility = 'hidden';
@@ -133,18 +145,18 @@ export function updateLinesAndCrosshair(touches, fingers, lines, crosshair, touc
     }
 }
 
-export function updateCircle(touches, touchCircle, lines, workspace) {
+export function updateCircle(touches, touchCircle, lines, globalVars, nodes) {
     const { line1, line2, crosshairHorizontal, crosshairVertical } = lines;
     if (touches.length === 3) {
         const midpoint = calculateMidpoint(touches);
         const distances = calculateDistances(touches, midpoint);
         const radius = Math.max(...distances);
 
-        if (workspace.initialRadius === null || radius > workspace.initialRadius) {
-            workspace.initialRadius = radius;
+        if (globalVars.initialRadius === null || radius > globalVars.initialRadius) {
+            globalVars.initialRadius = radius;
         }
 
-        if (radius < (2 / 3) * workspace.initialRadius) {
+        if (radius < (2 / 3) * globalVars.initialRadius) {
             touchCircle.setAttribute('stroke', 'red');
         } else {
             touchCircle.setAttribute('stroke', 'darkgray');
@@ -161,17 +173,29 @@ export function updateCircle(touches, touchCircle, lines, workspace) {
         crosshairVertical.style.visibility = 'hidden';
 
         // Update temporary variables
-        if (workspace.initialMidpoint === null) {
-            workspace.initialMidpoint = midpoint;
+        if (globalVars.initialMidpoint === null) {
+            globalVars.initialMidpoint = midpoint;
         }
-        if (workspace.initialRadius === null) {
-            workspace.initialRadius = radius;
+        if (globalVars.initialRadius === null) {
+            globalVars.initialRadius = radius;
         }
 
         const currentDistances = calculateDistances(touches, midpoint);
-        workspace.temporaryScale = currentDistances.reduce((sum, dist) => sum + dist, 0) / currentDistances.length / workspace.initialRadius;
+        globalVars.temporaryScale = currentDistances.reduce((sum, dist) => sum + dist, 0) / currentDistances.length / globalVars.initialRadius;
 
-        workspace.temporaryOffset = [midpoint.midX - workspace.initialMidpoint.midX, midpoint.midY - workspace.initialMidpoint.midY];
+        globalVars.temporaryOffset = [midpoint.midX - globalVars.initialMidpoint.midX, midpoint.midY - globalVars.initialMidpoint.midY];
+
+        // Apply temporary offset to grabbed nodes
+        nodes.forEach(node => {
+            const state = node.getAttribute('state');
+            if (state === 'grabbed') {
+                const x = parseFloat(node.getAttribute('cx')) || 0;
+                const y = parseFloat(node.getAttribute('cy')) || 0;
+                node.setAttribute('cx', x + globalVars.temporaryOffset[0] - globalVars.lastOffset[0]);
+                node.setAttribute('cy', y + globalVars.temporaryOffset[1] - globalVars.lastOffset[1]);
+            }
+        });
+
     } else {
         touchCircle.style.visibility = 'hidden';
     }
